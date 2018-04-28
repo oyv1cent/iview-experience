@@ -65,7 +65,7 @@ uploadFile () {
         .then(res => {
             if (res.data.status === '1') {
                 this.readyFiles = [];
-                this.handleSuccessUpload();// 成功触发，不再调用iview的钩子函数了
+                this.handleSuccessUpload();// 由于是手工制作的上传，所以上传成功也不会触发iview组件的成功回掉函数
             }
         })
         .catch(err => {
