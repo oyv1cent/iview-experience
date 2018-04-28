@@ -46,7 +46,37 @@ uploadFile () {
 },
 ```
 
-> 最后： 这个方法通过调用iview内部的post方法，是一个文件一个文件上传的。希望一次上传多个文件，还需要改造，自己通过axios等xhr库去上传，而不是采用post方法！
+> 最后： 这个方法通过调用iview内部的post方法，是一个文件一个文件上传的。希望一次上传多个文件，还需要改造，自己通过axios等xhr库去上传，而不是采用post方法。
+
+一次性上传多个文件代码：
+``` js
+uploadFile () {
+    this.loadingStatus = true;
+    // for (let i = 0; i < this.readyFiles.length; i++) {
+    //     let file = this.readyFiles[i];
+    //     this.$refs.upload.post(file);
+    // }
+    let params = new FormData();
+    // 将readyFile中的文件添加到FormData中
+    this.readyFiles.forEach(file => params.append(file.name, file));
+    // params.append('Authorization', sessionStorage.JWT_TOKEN); // token验证上传权限
+    let config = {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    };
+    axios.post('//192.168.0.114:8099/fileUpload/uploadFileList', params, config)
+        .then(res => {
+            if (res.data.status === '1') {
+                this.readyFiles = [];
+                this.handleSuccessUpload();// 成功触发，不再调用iview的钩子函数了
+            }
+        })
+        .catch(err => {
+            console.log(err);
+        });
+},
+```
 
 ## 2. Page组件
 
@@ -56,7 +86,7 @@ uploadFile () {
 但Page组件只会在刚开始计算一次，这样子导致的情况就是，数据条数变多时，下拉（条数选择）所在位置不符合预期。
 
 解决方案： 在Page组件增加一条style属性，设置position为relative。
-（这个应该是一个小坑，但不清楚作者不加relative的缘由，不加relative，在高度变化后不去重新计算位置，导致在某些情况下就会有不符合预期的错误）。
+（这个应该是一个小坑，但不清楚作者不加relative的缘由，不加relative，在高度变化后不去重新计算位置，导致在某些情况下就会有不符合预期的问题）。
 
 ## 3. sidebarMenu(iview-admin组件)
 
