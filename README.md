@@ -52,10 +52,6 @@ uploadFile () {
 ``` js
 uploadFile () {
     this.loadingStatus = true;
-    // for (let i = 0; i < this.readyFiles.length; i++) {
-    //     let file = this.readyFiles[i];
-    //     this.$refs.upload.post(file);
-    // }
     let params = new FormData();
     // 将readyFile中的文件添加到FormData中
     this.readyFiles.forEach(file => params.append(file.name, file));
@@ -65,7 +61,7 @@ uploadFile () {
             'Content-Type': 'multipart/form-data'
         }
     };
-    axios.post('//192.168.0.114:8099/fileUpload/uploadFileList', params, config)
+    axios.post('//192.168.0.1/upload', params, config)
         .then(res => {
             if (res.data.status === '1') {
                 this.readyFiles = [];
