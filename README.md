@@ -86,6 +86,39 @@ uploadFile () {
 
 ## 3. sidebarMenu(iview-admin组件)
 
-> 这个提了issue，所以直接给传送门吧。
+> 这个提了issue，所以直接给传送门吧。这个最后发现是iview的bug，已经给iview提了issue以及pr。
 
 [iview版本更新导致sidebarMenu使用异常](https://github.com/iview/iview-admin/issues/592)
+[Fix Bug: Menu.vue (issue: #3575)](https://github.com/iview/iview/pull/3578)
+
+这个可能是作者在处理menu手风琴issue的时候，忽略了对names数组的处理，导致非手风琴模式的时候on-page-change返回值是不符合预期的。因为几次测试，发现展开收起子菜单的时候不影响on-page-change的值，于是在iview源码找到了这个bug。
+
+## 4. Modal组件
+
+在使用Modal组件的时候，有时候不希望使用原生的尾部或者头部，这个时候应该去自定义，利用slot这个Vue的特性。
+
+> 小技巧：可以利用refs去调用modal组件上的方法。
+
+```html
+<Modal v-model="modal2" ref="modal" width="360">
+    <p slot="header" style="color:#f60;text-align:center">
+        <Icon type="information-circled"></Icon>
+        <span>Delete confirmation</span>
+    </p>
+    <div style="text-align:center">
+        <p>After this task is deleted, the downstream 10 tasks will not be implemented.</p>
+        <p>Will you delete it?</p>
+    </div>
+    <div slot="footer">
+        <Button type="error" size="large" @click="del">Delete</Button>
+        <Button type="ghost" size="large" @click="cancel">Cancel</Button>
+    </div>
+</Modal>
+```
+```js
+  cancel () {
+    this.$refs.modal.close();
+  }
+```
+业务需要，底部点击取消时需要做更多事，此时就应用到了slot这个特性。
+随后发现，点击自定义的取消跟点击遮罩层而取消触发的函数是不一样的，于是研究了一下iview源码，发现并没有另外的钩子事件。。（准备再提一下Pr,因为我认为点击遮罩层应该返回一个钩子函数让用户有更多自由去控制）
