@@ -5,8 +5,6 @@
 </p>
 
 # iView 踩坑经验
-[![vue](https://img.shields.io/badge/vue-2.5.13-brightgreen.svg?style=flat-square)](https://github.com/vuejs/vue)
-[![iview ui](https://img.shields.io/badge/iview-2.8.0-brightgreen.svg?style=flat-square)](https://github.com/iview/iview)
 
 Chrome浏览器
 ## 1. Upload组件
